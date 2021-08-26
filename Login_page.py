@@ -4,8 +4,14 @@ from tkinter.constants import BUTT, E, NSEW, S, TOP, W
 from tkinter import font as tkfont
 from db import chatDB
 
+# Login Page Frame
+
 
 class LoginPage(tk.Frame):
+    # initializing the controller for parent to move between frames
+    # global username, password, error_message text variables
+    # configuring columns & rows
+    # creating inner frames & widgets attached to them
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
@@ -18,6 +24,7 @@ class LoginPage(tk.Frame):
         self.create_widgets()
         self.db = chatDB()
 
+    # creating all needed wigets within the created frames
     def create_widgets(self):
         self.username_label = tk.Label(
             self.login_frame_entries, text='Username')
@@ -47,6 +54,8 @@ class LoginPage(tk.Frame):
             self.login_frame_error, textvariable=self.error_message, fg='red')
         self.error_message_label.grid(column=0, row=0)
 
+    # creating inner frames to hold and organize the widgets
+
     def create_frames(self):
         self.login_frame_entries = tk.Frame(self)
 
@@ -64,6 +73,9 @@ class LoginPage(tk.Frame):
         self.login_frame_error.grid(
             column=0, columnspan=3, row=4, rowspan=1)
 
+    # login func to validate non empty inputs
+    # showing/hiding error messages
+    # moving to other frames on successful login
     def login(self):
         self.hide_error_message()
         if len(self.username.get()) == 0 or len(self.password.get()) == 0:
@@ -72,11 +84,12 @@ class LoginPage(tk.Frame):
         else:
             if self.db.retrieve_user_db(self.username.get(), self.password.get()):
                 self.controller.show_frame('ChatRoomPage')
-                
+
             else:
                 self.show_error_message(
                     "Can't find user, Register if you don't have account")
 
+    # showing & hiding error message
     def show_error_message(self, message):
         self.error_message.set(message)
 

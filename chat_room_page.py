@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter.constants import BUTT, NSEW, TOP
 from tkinter import Button, font as tkfont
 
+# chat room frame
+
 
 class ChatRoomPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -9,6 +11,7 @@ class ChatRoomPage(tk.Frame):
         self.controller = controller
         self.create_widgets()
 
+    # creating widgets that would be part of the chat room frame
     def create_widgets(self):
         welcomeLabel = tk.Label(self, text='WElcome to chat rooms')
         welcomeLabel.pack(side='top', fill='x', pady=10)

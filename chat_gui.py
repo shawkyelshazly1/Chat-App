@@ -5,15 +5,21 @@ from chat_room_page import ChatRoomPage
 from Login_page import LoginPage
 from register_page import RegisterPage
 
+# Main chat App GUI class
+
 
 class ChatApp(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
 
+        # Container for the App which will hold all frames
+
         container = tk.Frame(self)
         container.grid(column=0, row=0, sticky=NSEW)
         container.grid_columnconfigure(0, weight=1)
         container.grid_rowconfigure(0, weight=1)
+
+        # creating dictionary of applicable frames {'page_name':frame object}
 
         self.frames = {}
         for page in (LoginPage, RegisterPage, ChatRoomPage):
@@ -24,6 +30,8 @@ class ChatApp(tk.Tk):
             frame.grid(row=0, column=0, sticky=NSEW)
 
         self.show_frame('LoginPage')
+
+    # function to be used across pages to move from page to another by raising frames
 
     def show_frame(self, page_name):
         frame = self.frames[page_name]

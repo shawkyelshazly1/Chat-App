@@ -1,18 +1,24 @@
 import sqlite3
 import bcrypt
 
+# Database class to be instanced within the GUI app
+
 
 class chatDB():
+    # Creating connections with DB as well as creating tables if doesn't exist
     def __init__(self):
         self.conn = sqlite3.connect('chat_app_db.db')
         self.create_db_tables()
 
+    # opening cursor connection
     def open_cursor_connection(self):
         self.cur = self.conn.cursor()
 
+    # closing cursor connection
     def close_cursor_connection(self):
         self.cur.close()
 
+    # used in the __init__ to create tables if doesn't exist
     def create_db_tables(self):
         self.open_cursor_connection()
         try:
@@ -25,6 +31,9 @@ class chatDB():
             self.conn.commit()
             self.close_cursor_connection()
 
+    # Inserting User in DB
+    # checking iif username used already though self.user_exists(arg:username)
+    # hashing password using bcrypt
     def insert_user_db(self, firstname, lastname, username, password):
         if self.user_exists(username) == None:
             hashed_password = bcrypt.hashpw(
@@ -47,6 +56,9 @@ class chatDB():
             print('user already exists')
             return False
 
+    # loading user from DB matching both username & password
+    # returning bool
+    # TODO: return user object to be used in the GUI App
     def retrieve_user_db(self, username, password):
         self.open_cursor_connection()
         try:
@@ -69,6 +81,7 @@ class chatDB():
             print('User not found')
             return False
 
+    # checking if username used already
     def user_exists(self, username):
         self.open_cursor_connection()
         try:
