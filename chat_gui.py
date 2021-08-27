@@ -29,7 +29,7 @@ class ChatApp(tk.Tk):
 
             frame.grid(row=0, column=0, sticky='nsew')
 
-        self.show_frame('LoginPage')
+        self.show_frame('ChatRoomPage')
 
     # function to be used across pages to move from page to another by raising frames
 
@@ -42,5 +42,6 @@ class ChatApp(tk.Tk):
 
 if __name__ == "__main__":
     app = ChatApp()
+    app.title('Chat App')
     # app.geometry('400x400')
     app.mainloop()
