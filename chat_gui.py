@@ -11,7 +11,7 @@ class ChatApp(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
 
         container = tk.Frame(self)
-        container.grid(column=0, row=0, sticky=NSEW)
+        container.grid(column=0, row=0, sticky='nsew')
         container.grid_columnconfigure(0, weight=1)
         container.grid_rowconfigure(0, weight=1)
 
@@ -21,16 +21,18 @@ class ChatApp(tk.Tk):
             frame = page(parent=container, controller=self)
             self.frames[page_name] = frame
 
-            frame.grid(row=0, column=0, sticky=NSEW)
+            frame.grid(row=0, column=0, sticky='nsew')
 
         self.show_frame('LoginPage')
 
     def show_frame(self, page_name):
-        frame = self.frames[page_name]
-        frame.tkraise()
+        for frame in self.frames:
+            self.frames[frame].grid_remove()
+
+        self.frames[page_name].grid()
 
 
 if __name__ == "__main__":
     app = ChatApp()
-    app.geometry('400x400')
+    # app.geometry('400x400')
     app.mainloop()

@@ -45,7 +45,7 @@ class LoginPage(tk.Frame):
 
         self.error_message_label = tk.Label(
             self.login_frame_error, textvariable=self.error_message, fg='red')
-        self.error_message_label.grid(column=0, row=0)
+        self.error_message_label.grid(column=9, row=0)
 
     def create_frames(self):
         self.login_frame_entries = tk.Frame(self)
@@ -62,7 +62,7 @@ class LoginPage(tk.Frame):
 
         self.login_frame_error = tk.Frame(self)
         self.login_frame_error.grid(
-            column=0, columnspan=3, row=4, rowspan=1)
+            column=1, columnspan=2, row=4)
 
     def login(self):
         self.hide_error_message()
@@ -72,7 +72,7 @@ class LoginPage(tk.Frame):
         else:
             if self.db.retrieve_user_db(self.username.get(), self.password.get()):
                 self.controller.show_frame('ChatRoomPage')
-                
+
             else:
                 self.show_error_message(
                     "Can't find user, Register if you don't have account")
