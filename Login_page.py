@@ -52,7 +52,7 @@ class LoginPage(tk.Frame):
 
         self.error_message_label = tk.Label(
             self.login_frame_error, textvariable=self.error_message, fg='red')
-        self.error_message_label.grid(column=0, row=0)
+        self.error_message_label.grid(column=9, row=0)
 
     # creating inner frames to hold and organize the widgets
 
@@ -71,7 +71,7 @@ class LoginPage(tk.Frame):
 
         self.login_frame_error = tk.Frame(self)
         self.login_frame_error.grid(
-            column=0, columnspan=3, row=4, rowspan=1)
+            column=1, columnspan=2, row=4)
 
     # login func to validate non empty inputs
     # showing/hiding error messages
