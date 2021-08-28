@@ -1,5 +1,6 @@
 import socket
 import threading
+import json
 
 PORT = 5000
 SERVER = socket.gethostbyname(socket.gethostname())
@@ -14,24 +15,26 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 server.bind(ADDRESS)
 
-threads = {}
-
 
 def StartChat():
     print(f'server is working on: {SERVER}')
+    b = b''
 
     server.listen()
 
     while True:
         try:
             conn, addr = server.accept()
-            conn.send('NAME'.encode(FORMAT))
 
-            name = conn.recv(1024).decode(FORMAT)
+            print(conn.getsockname())
 
-            names.append(name)
+            message = conn.recv(1024)
+            b += message
+            message_decoded = json.loads(b.decode(FORMAT))
 
-            broadcastMessage(f'{name} has joined the chat!\n'.encode(FORMAT))
+            # broadcastMessage(f'{name} has joined the chat!\n'.encode(FORMAT))
+
+            print('message is: ' + str(message_decoded))
 
             conn.send('Connected Successfully!'.encode(FORMAT))
 

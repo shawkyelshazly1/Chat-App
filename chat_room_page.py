@@ -4,6 +4,7 @@ from tkinter.constants import BUTT, LEFT, NSEW, TOP
 from tkinter import Button, Message, font as tkfont
 import threading
 import socket
+import json
 # chat room frame
 
 
@@ -105,6 +106,7 @@ class ChatRoomPage(tk.Frame):
 
     def sendMessage(self, msg):
         while True:
-            message = (f"{self.controller.username.get()}: {msg}")
-            self.controller.client.send(message.encode(FORMAT))
+            message = {'username': self.controller.username.get(),
+                       'message': msg}
+            self.controller.client.send(message)
             break

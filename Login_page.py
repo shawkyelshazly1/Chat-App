@@ -4,7 +4,10 @@ from tkinter.constants import BUTT, E, NSEW, S, TOP, W
 from tkinter import font as tkfont
 from db import chatDB
 import socket
+import json
+
 # Login Page Frame
+
 
 PORT = 5000
 SERVER = '127.0.1.1'
@@ -110,4 +113,9 @@ class LoginPage(tk.Frame):
     def client_connection(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.connect(ADDRESS)
+        message_obj = {'username': self.controller.username.get(),
+                       'message': 'Joined The Chat!',
+                       'client': self.client.getsockname()}
+        send_obj = json.dumps(message_obj).encode(FORMAT)
+        self.client.send(send_obj)
         self.controller.client = self.client
