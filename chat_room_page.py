@@ -55,8 +55,6 @@ class ChatRoomPage(tk.Frame):
         self.message_box_frame.pack(side='bottom')
         self.message_box_frame.pack_propagate(0)
 
-    
-
     def onFrameConfigure(self, event):
         '''Reset the scroll region to encompass the inner frame'''
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
