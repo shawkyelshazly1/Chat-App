@@ -73,13 +73,13 @@ class chatDB():
             match = bcrypt.checkpw(password.strip().encode('utf-8'), user[4])
             if match:
                 print('all good to login')
-                return True
+                return user
             else:
                 print('password not matching')
-                return False
+                return None
         else:
             print('User not found')
-            return False
+            return None
 
     # checking if username used already
     def user_exists(self, username):

@@ -3,8 +3,13 @@ import tkinter as tk
 from tkinter.constants import BUTT, E, NSEW, S, TOP, W
 from tkinter import font as tkfont
 from db import chatDB
-
+import socket
 # Login Page Frame
+
+PORT = 5000
+SERVER = '127.0.1.1'
+ADDRESS = (SERVER, PORT)
+FORMAT = 'utf-8'
 
 
 class LoginPage(tk.Frame):
@@ -82,8 +87,14 @@ class LoginPage(tk.Frame):
             self.show_error_message("Please Enter Username and Password")
 
         else:
-            if self.db.retrieve_user_db(self.username.get(), self.password.get()):
+            user = self.db.retrieve_user_db(
+                self.username.get(), self.password.get())
+            print(user)
+            if user:
+                self.controller.username.set(user[3])
                 self.controller.show_frame('ChatRoomPage')
+                self.client_connection()
+                self.controller.frames['ChatRoomPage'].recieving_thread()
 
             else:
                 self.show_error_message(
@@ -95,3 +106,8 @@ class LoginPage(tk.Frame):
 
     def hide_error_message(self):
         self.error_message.set('')
+
+    def client_connection(self):
+        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client.connect(ADDRESS)
+        self.controller.client = self.client

@@ -1,7 +1,9 @@
+from Login_page import FORMAT
 import tkinter as tk
-from tkinter.constants import BUTT, NSEW, TOP
-from tkinter import Button, font as tkfont
-
+from tkinter.constants import BUTT, LEFT, NSEW, TOP
+from tkinter import Button, Message, font as tkfont
+import threading
+import socket
 # chat room frame
 
 
@@ -11,18 +13,18 @@ class ChatRoomPage(tk.Frame):
         self.controller = controller
         self.create_frames()
         self.create_widgets()
-        self.populate()
+        self.msg = tk.StringVar()
 
     # creating widgets that would be part of the chat room frame
 
     def create_widgets(self):
 
-        self.message_entry = tk.Text(
+        self.message_entry = tk.Entry(
             self.message_box_frame, width=61)
         self.message_entry.pack(side='left')
 
         self.send_button = tk.Button(
-            self.message_box_frame, text="Send")
+            self.message_box_frame, text="Send", command=lambda: self.sendMessageThread(self.message_entry.get()))
         self.send_button.pack(side='right', ipadx=30, ipady=30)
 
     def create_frames(self):
@@ -33,7 +35,9 @@ class ChatRoomPage(tk.Frame):
         self.canvas = tk.Canvas(
             self.messages_frame, width=600, height=420, bg='#d8e2dc')
 
-        self.content_frame = tk.Frame(self.canvas, bg='#d8e2dc')
+        self.content_frame = tk.Frame(
+            self.canvas, bg='#d8e2dc')
+        self.content_frame.pack(side='left')
 
         self.canvas.create_window(
             (0, 0), window=self.content_frame, anchor='nw')
@@ -74,3 +78,33 @@ class ChatRoomPage(tk.Frame):
 
         self.canvas.unbind_all("<Button-5>")
         self.canvas.unbind_all("<Button-4>")
+
+    def recieving_thread(self):
+        thread_recv = threading.Thread(target=self.recieve)
+        thread_recv.start()
+
+    def recieve(self):
+        while True:
+            try:
+                message = self.controller.client.recv(1024).decode(FORMAT)
+                if message == 'NAME':
+                    self.controller.client.send(
+                        self.controller.username.get().encode(FORMAT))
+
+                else:
+                    tk.Label(self.content_frame, text=message,
+                             bg='#d8e2dc', pady=5).grid(column=0)
+            except:
+                self.controller.client.close()
+                break
+
+    def sendMessageThread(self, msg):
+        self.message_entry.delete(0, len(self.message_entry.get()))
+        sendThread = threading.Thread(target=self.sendMessage, args=(msg,))
+        sendThread.start()
+
+    def sendMessage(self, msg):
+        while True:
+            message = (f"{self.controller.username.get()}: {msg}")
+            self.controller.client.send(message.encode(FORMAT))
+            break

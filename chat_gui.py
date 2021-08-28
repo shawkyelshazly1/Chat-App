@@ -1,8 +1,9 @@
+import socket
 import tkinter as tk
 from tkinter.constants import BUTT, NSEW, TOP
 from tkinter import Button, font as tkfont
 from chat_room_page import ChatRoomPage
-from Login_page import LoginPage
+from Login_page import FORMAT, LoginPage
 from register_page import RegisterPage
 
 # Main chat App GUI class
@@ -11,6 +12,8 @@ from register_page import RegisterPage
 class ChatApp(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
+        self.username = tk.StringVar()
+        self.client = None
 
         # Container for the App which will hold all frames
 
@@ -29,7 +32,7 @@ class ChatApp(tk.Tk):
 
             frame.grid(row=0, column=0, sticky='nsew')
 
-        self.show_frame('ChatRoomPage')
+        self.show_frame('LoginPage')
 
     # function to be used across pages to move from page to another by raising frames
 
@@ -39,9 +42,21 @@ class ChatApp(tk.Tk):
 
         self.frames[page_name].grid()
 
+    def on_close(self):
+        self.destroy()
+        if self.client != None:
+            try:
+                self.client.send(
+                    f'{self.username.get()} has left the chat!'.encode(FORMAT))
+                self.client.shutdown(socket.SHUT_RDWR)
+                self.client.close()
+            except:
+                print('error')
+
 
 if __name__ == "__main__":
     app = ChatApp()
     app.title('Chat App')
     # app.geometry('400x400')
+    app.protocol('WM_DELETE_WINDOW', app.on_close)
     app.mainloop()
