@@ -1,3 +1,4 @@
+from typing import final
 from Login_page import FORMAT
 import tkinter as tk
 from tkinter.constants import BUTT, LEFT, NSEW, TOP
@@ -5,6 +6,7 @@ from tkinter import Button, Message, font as tkfont
 import threading
 import socket
 import json
+import ast
 # chat room frame
 
 
@@ -87,15 +89,26 @@ class ChatRoomPage(tk.Frame):
     def recieve(self):
         while True:
             try:
-                message = self.controller.client.recv(1024).decode(FORMAT)
-                if message == 'NAME':
-                    self.controller.client.send(
-                        self.controller.username.get().encode(FORMAT))
+                message_received = self.controller.client.recv(
+                    1024)
+                message_data = json.loads(message_received.decode('utf-8'))
+                print(message_data)
+                try:
+                    if message_data['welcome_message']:
+                        tk.Label(self.content_frame, text=message_data['welcome_message'],
+                                 bg='#d8e2dc', pady=5).grid(column=0)
+                except:
+                    if message_data['username'] == self.controller.username.get():
+                        tk.Label(self.content_frame, text=f"You: {message_data['message']}",
+                                 bg='#d8e2dc', pady=5).grid(column=0)
+                    else:
+                        tk.Label(self.content_frame, text=f"{message_data['username']}: {message_data['message']}",
+                                 bg='#d8e2dc', pady=5).grid(column=0)
+                finally:
+                    continue
 
-                else:
-                    tk.Label(self.content_frame, text=message,
-                             bg='#d8e2dc', pady=5).grid(column=0)
             except:
+                print('Erorrrrr')
                 self.controller.client.close()
                 break
 
@@ -108,5 +121,6 @@ class ChatRoomPage(tk.Frame):
         while True:
             message = {'username': self.controller.username.get(),
                        'message': msg}
-            self.controller.client.send(message)
+            send_obj = json.dumps(message).encode(FORMAT)
+            self.controller.client.send(send_obj)
             break

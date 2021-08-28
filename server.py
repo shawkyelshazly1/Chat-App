@@ -25,18 +25,20 @@ def StartChat():
     while True:
         try:
             conn, addr = server.accept()
+            try:
+                data = conn.recv(1024)
+                message_data = json.loads(data.decode(FORMAT))
+                if len(clients) >= 1:
+                    join_message = {
+                        'welcome_message': f'{message_data["username"]} Joined the chat'}
+                    join_send_obj = json.dumps(join_message).encode(FORMAT)
+                    broadcastMessage(join_send_obj)
+            except:
+                continue
 
-            print(conn.getsockname())
-
-            message = conn.recv(1024)
-            b += message
-            message_decoded = json.loads(b.decode(FORMAT))
-
-            # broadcastMessage(f'{name} has joined the chat!\n'.encode(FORMAT))
-
-            print('message is: ' + str(message_decoded))
-
-            conn.send('Connected Successfully!'.encode(FORMAT))
+            message = {'welcome_message': 'Connected Successfully!'}
+            send_obj = json.dumps(message).encode(FORMAT)
+            conn.send(send_obj)
 
             thread = threading.Thread(target=handle, args=(conn, addr))
 
@@ -70,8 +72,10 @@ def remove_connection(conn):
 def broadcastMessage(message):
     for client in clients:
         try:
+            print(message)
             client.send(message)
         except:
+            print('opss')
             remove_connection(client)
         finally:
             continue

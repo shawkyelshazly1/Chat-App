@@ -92,7 +92,6 @@ class LoginPage(tk.Frame):
         else:
             user = self.db.retrieve_user_db(
                 self.username.get(), self.password.get())
-            print(user)
             if user:
                 self.controller.username.set(user[3])
                 self.controller.show_frame('ChatRoomPage')
@@ -113,9 +112,7 @@ class LoginPage(tk.Frame):
     def client_connection(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.connect(ADDRESS)
-        message_obj = {'username': self.controller.username.get(),
-                       'message': 'Joined The Chat!',
-                       'client': self.client.getsockname()}
+        message_obj = {'username': self.controller.username.get()}
         send_obj = json.dumps(message_obj).encode(FORMAT)
         self.client.send(send_obj)
         self.controller.client = self.client
