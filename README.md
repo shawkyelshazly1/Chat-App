@@ -1,2 +1,2 @@
 # Chat-App
-Chat room app using sockets with register & login features connected to offline DB
+Chat room app using sockets with register & login features connected to offline DB using sqlite3
