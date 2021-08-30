@@ -1,2 +1,2 @@
 # Chat-App
-Internal Chat App allows room chats as well as 1-to-1 chat
+Chat room app using sockets with register & login features connected to offline DB
